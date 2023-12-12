@@ -49,7 +49,7 @@ data_vehicles$volume <- data_vehicles$hlv + data_vehicles$hpv + data_vehicles$lv
 data_vehicles$transmission <- substr(data_vehicles$trany, start=1, stop=3)
 
 # Create Dataset of Interest
-data_study <- data_vehicles[, c("co2TailpipeGpm","barrels08","comb08","cylinders","displ","drive","fuelType","make","transmission","phevBlended","VClass","volume")]
+data_study <- data_vehicles[, c("co2TailpipeGpm","barrels08","comb08","cylinders","displ","drive","fuelType","make","transmission","VClass","volume")]
 count <- nrow(data_study)
 head(data_study)
 str(data_study)
@@ -77,7 +77,7 @@ rm(data_study_numeric)
 rm(count_study_numeric)
 
 # Remove variables aligned with CO2 emissions and volume, which is missing for some vehicle types
-data_study <- data_study[, c("co2TailpipeGpm","cylinders","displ","drive","fuelType","make","transmission","phevBlended","VClass")]
+data_study <- data_study[, c("co2TailpipeGpm","cylinders","displ","drive","fuelType","make","transmission","VClass")]
 count_study <- nrow(data_study)
 count_removedvehicles <- count_vehicles - count_study
 summary(data_study)
@@ -105,3 +105,23 @@ ggplot(data = data_study, aes(x = co2TailpipeGpm)) +
   geom_histogram(bins = data_study_bins, fill = "skyblue", color = "black", aes(y = ..density..)) +
   stat_function(fun = dnorm, args = list(mean = fitted_mean, sd = fitted_sd), color = "red", size = 1.2) +
   labs(x = "CO2 Tailpipe Emission (gpm)", y = "Frequency", title = "Histogram of CO2 Tailpipe Emission with Best-fit Normal Distribution Curve")
+
+# Combine categorical values for fuelType
+table_fueltype <- table(data_study$fuelType)
+print(table_fueltype)
+data_study$fuelType[data_study$fuelType == "Premium Gas and Electricity"] <- "Hybrid"
+data_study$fuelType[data_study$fuelType == "Premium Gas or Electricity"] <- "Hybrid"
+data_study$fuelType[data_study$fuelType == "Premium and Electricity"] <- "Hybrid"
+data_study$fuelType[data_study$fuelType == "Premium or E85"] <- "E85"
+data_study$fuelType[data_study$fuelType == "Gasoline or E85"] <- "E85"
+data_study$fuelType[data_study$fuelType == "Regular Gas and Electricity"] <- "Hybrid"
+data_study$fuelType[data_study$fuelType == "Regular Gas or Electricity"] <- "Hybrid"
+data_study$fuelType[data_study$fuelType == "Gasoline or natural gas"] <- "Gasoline or Other"
+data_study$fuelType[data_study$fuelType == "Gasoline or propane"] <- "Gasoline or Other"
+data_study$fuelType[data_study$fuelType == "CNG"] <- "Gasoline or Other"
+table_fueltype <- table(data_study$fuelType)
+print(table_fueltype)
+
+# Combine categorical values for drive
+table_drive <- table(data_study$drive)
+print(table_drive)

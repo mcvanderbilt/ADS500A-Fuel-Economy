@@ -5,12 +5,18 @@ install.packages("ggplot2")     #Enables visualization of data
 install.packages("ggcorrplot")  #Creates correlation matrix heatmap
 install.packages("car")         #Used for calculation of Variance Inflation Factor (VIF)
 install.packages("dplyr")       #Used for combining relational data
+install.packages("MASS")        #Used for creating a best fit function
+install.packages("modeest")     #Used to calculate the statistical mode
+install.packages("moments")     #Used to calculate the skewness and kurtosis
 
 # Load Necessary Packages
 library(ggplot2)
 library(ggcorrplot)
 library(car)
 library(dplyr)
+library(MASS)
+library(modeest)
+library(moments)
 
 # Remove Existing Data
 rm(data_vehicles)
@@ -75,3 +81,27 @@ data_study <- data_study[, c("co2TailpipeGpm","cylinders","displ","drive","fuelT
 count_study <- nrow(data_study)
 count_removedvehicles <- count_vehicles - count_study
 summary(data_study)
+
+# Identify Summary Statistics for co2TailpipeGpm
+data_study_mean <- mean(data_study$co2TailpipeGpm)
+data_study_median <- median(data_study$co2TailpipeGpm)
+data_study_mode <- mfv(data_study$co2TailpipeGpm)
+data_study_sd <- sd(data_study$co2TailpipeGpm)
+data_study_skewness <- skewness(data_study$co2TailpipeGpm)
+data_study_kurtosis <- kurtosis(data_study$co2TailpipeGpm)
+data_study_bins <- round(sqrt(count_study),0)
+
+# Create histogram of co2TailpipeGpm
+ggplot(data = data_study, aes(x = co2TailpipeGpm)) +
+  geom_histogram(bins = data_study_bins, fill = "skyblue", color = "black") +
+  labs(x = "CO2 Tailpipe Emission (gpm)", y = "Frequency", title = "Histogram of CO2 Tailpipe Emission")
+
+# Create histogram of co2TailpipeGpm with best fit distribution
+data_bestfit <- rnorm(count_study, mean = data_study_mean, data_study_sd)  # Generating random data following a normal distribution
+fit <- fitdistr(data_bestfit, "normal")
+fitted_mean <- fit$estimate[1]
+fitted_sd <- fit$estimate[2]
+ggplot(data = data_study, aes(x = co2TailpipeGpm)) +
+  geom_histogram(bins = data_study_bins, fill = "skyblue", color = "black", aes(y = ..density..)) +
+  stat_function(fun = dnorm, args = list(mean = fitted_mean, sd = fitted_sd), color = "red", size = 1.2) +
+  labs(x = "CO2 Tailpipe Emission (gpm)", y = "Frequency", title = "Histogram of CO2 Tailpipe Emission with Best-fit Normal Distribution Curve")

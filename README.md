@@ -41,5 +41,5 @@ The objective of this analysis is to statistically investigate the association o
 ---
 
 #### Important Links
-- <a href="https://www.overleaf.com/read/ttgqypjwcpkk">Overleaf LaTeX Files for Written Report</a> (drafted in APA-7)
 - <a href="https://fueleconomy.gov/feg/ws/">FuelEconomy.gov Web Services</a>
+- <a href="https://www.overleaf.com/read/ttgqypjwcpkk">Overleaf LaTeX Files for Written Report</a> (drafted in APA-7)

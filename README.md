@@ -1,15 +1,4 @@
 # EXAMPLE RESEARCH PAPER FOR STUDENTS #
-University of San Diego</br>
-Shiley-Marcos School of Engineering</br>
-Master of Applied Data Science</br>
-
-
-ADS-500A: Probability & Statistics for Data Science
-
----
-
-#### NOTE FOR STUDENTS: #####
-This example research is performed using a more recent extract from FuelEconomy.gov and applies more techniques and research than is required for course project. _You may use this repo as one of the required references but **do not** use this to cross reference calculated figures; they will not match._ Additionally, this research is performed significantly beyond that required for your paper. Please check your content against the paper rubric not this sample.
 
 ---
 

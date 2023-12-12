@@ -10,6 +10,12 @@ library(ggplot2)        #Enables visualization of data
 library(ggcorrplot)     #Creates correlation matrix heatmap
 library(car)            #Used for calculation of Variance Inflation Factor (VIF)
 
+# Remove Existing Data
+rm(data_vehicles)
+rm(data_emissions)
+rm(file_vehicles)
+rm(file_emissions)
+
 # Load Vehicles Data
 file_vehicles <- "data/vehicles.csv"
 data_vehicles <- read.csv(file_vehicles)

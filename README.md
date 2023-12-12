@@ -19,7 +19,6 @@ The objective of this analysis is to statistically investigate the association o
 ---
 
 #### Import Notes/Footnotes Copied from FuelEconomy.gov
-- Data Updated: Monday November 13 2023
 - Annual fuel costs shown in 1997-2014 Fuel Economy Guides are based on fuel prices when the guide was originally printed.
 1. 1 barrel = 42 gallons. Petroleum consumption is estimated using the Department of Energy's GREET model and includes petroleum consumed from production and refining to distribution and final use. Vehicle manufacture is excluded.
 2. The MPG estimates for all 1985-2007 model year vehicles and some 2011-2016 model year vehicles have been updated.  Learn More

@@ -18,11 +18,6 @@ The objective of this analysis is to statistically investigate the association o
 
 ---
 
-#### FuelEconomy.gov Dataset
-- <a href="https://fueleconomy.gov/feg/epadata/vehicles.csv">Vehicle Data CSV (unzipped)</a>
-
----
-
 #### Import Notes/Footnotes Copied from FuelEconomy.gov
 - Annual fuel costs shown in 1997-2014 Fuel Economy Guides are based on fuel prices when the guide was originally printed.
 1. 1 barrel = 42 gallons. Petroleum consumption is estimated using the Department of Energy's GREET model and includes petroleum consumed from production and refining to distribution and final use. Vehicle manufacture is excluded.
@@ -39,7 +34,11 @@ The objective of this analysis is to statistically investigate the association o
 
 ---
 
-#### Related Links
-- <a href="https://github.com/mcvanderbilt/USD-ADS500A">ASD500A Research Project Information for Students (GitHub)</a>
+#### References
+- Fueleconomy.gov.  (2023). Vehicles [Data set].  U.S. Department of Energy. Retrieved December 11, 2023, from <a href="https://fueleconomy.gov/feg/epadata/vehicles.csv">https://fueleconomy.gov/feg/epadata/vehicles.csv</a>
+- Fueleconomy.gov.  (2023). Emissions [Data set].  U.S. Department of Energy. Retrieved December 11, 2023, from <a href="https://fueleconomy.gov/feg/epadata/emissions.csv">https://fueleconomy.gov/feg/epadata/emissions.csv</a>
+
+---
+
+#### Important Links
 - <a href="https://www.overleaf.com/read/ttgqypjwcpkk">Overleaf LaTeX Files for Written Report</a> (drafted in APA-7)
-- <a href="https://fueleconomy.gov/feg/ws/">FuelEconomy.gov Web Services (includes data dictionary)</a> (updated 13 Nov 2023; downloaded 11 Dec 2023)

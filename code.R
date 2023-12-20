@@ -5,18 +5,12 @@ install.packages("ggplot2")     #Enables visualization of data
 install.packages("ggcorrplot")  #Creates correlation matrix heatmap
 install.packages("car")         #Used for calculation of Variance Inflation Factor (VIF)
 install.packages("dplyr")       #Used for combining relational data
-install.packages("MASS")        #Used for creating a best fit function
-install.packages("modeest")     #Used to calculate the statistical mode
-install.packages("moments")     #Used to calculate the skewness and kurtosis
 
 # Load Necessary Packages
 library(ggplot2)
 library(ggcorrplot)
 library(car)
 library(dplyr)
-library(MASS)
-library(modeest)
-library(moments)
 
 # Remove Existing Data
 rm(data_vehicles)
@@ -46,10 +40,9 @@ summary(data_vehicles)
 
 # Add calculated field(s)
 data_vehicles$volume <- data_vehicles$hlv + data_vehicles$hpv + data_vehicles$lv2 + data_vehicles$lv4 + data_vehicles$pv2 + data_vehicles$pv4
-data_vehicles$transmission <- substr(data_vehicles$trany, start=1, stop=3)
 
 # Create Dataset of Interest
-data_study <- data_vehicles[, c("co2TailpipeGpm","barrels08","comb08","cylinders","displ","drive","fuelType","make","transmission","VClass","volume")]
+data_study <- data_vehicles[, c("co2TailpipeGpm","barrels08","comb08","cylinders","displ","drive","fuelType","make","trany","phevBlended","VClass","volume")]
 count <- nrow(data_study)
 head(data_study)
 str(data_study)
@@ -61,67 +54,15 @@ count_study <- nrow(data_study)
 
 # Remove -0- data
 data_study <- subset(data_study, co2TailpipeGpm != 0)
-data_study <- subset(data_study, cylinders != 0)
-data_study <- subset(data_study, displ != 0)
+data_study <- subset(data_study, volume != 0)
 count_study <- nrow(data_study)
 summary(data_study$co2TailpipeGpm)
+count_removedvehicles <- count_vehicles - count_study
 
-# Create Pearson Correlation Coefficient Matrix
+# Correlation matrix
 data_study_numeric <- data_study[, c("co2TailpipeGpm","barrels08","comb08","cylinders","displ","volume")]
 count_study_numeric <- nrow(data_study_numeric)
 correlation_matrix <- cor(data_study_numeric)
 print(correlation_matrix)
 ggcorrplot(correlation_matrix, lab = TRUE)
 ggcorrplot(correlation_matrix, type = "lower", lab = TRUE)
-rm(data_study_numeric)
-rm(count_study_numeric)
-
-# Remove variables aligned with CO2 emissions and volume, which is missing for some vehicle types
-data_study <- data_study[, c("co2TailpipeGpm","cylinders","displ","drive","fuelType","make","transmission","VClass")]
-count_study <- nrow(data_study)
-count_removedvehicles <- count_vehicles - count_study
-summary(data_study)
-
-# Identify Summary Statistics for co2TailpipeGpm
-data_study_mean <- mean(data_study$co2TailpipeGpm)
-data_study_median <- median(data_study$co2TailpipeGpm)
-data_study_mode <- mfv(data_study$co2TailpipeGpm)
-data_study_sd <- sd(data_study$co2TailpipeGpm)
-data_study_skewness <- skewness(data_study$co2TailpipeGpm)
-data_study_kurtosis <- kurtosis(data_study$co2TailpipeGpm)
-data_study_bins <- round(sqrt(count_study),0)
-
-# Create histogram of co2TailpipeGpm
-ggplot(data = data_study, aes(x = co2TailpipeGpm)) +
-  geom_histogram(bins = data_study_bins, fill = "skyblue", color = "black") +
-  labs(x = "CO2 Tailpipe Emission (gpm)", y = "Frequency", title = "Histogram of CO2 Tailpipe Emission")
-
-# Create histogram of co2TailpipeGpm with best fit distribution
-data_bestfit <- rnorm(count_study, mean = data_study_mean, data_study_sd)  # Generating random data following a normal distribution
-fit <- fitdistr(data_bestfit, "normal")
-fitted_mean <- fit$estimate[1]
-fitted_sd <- fit$estimate[2]
-ggplot(data = data_study, aes(x = co2TailpipeGpm)) +
-  geom_histogram(bins = data_study_bins, fill = "skyblue", color = "black", aes(y = ..density..)) +
-  stat_function(fun = dnorm, args = list(mean = fitted_mean, sd = fitted_sd), color = "red", size = 1.2) +
-  labs(x = "CO2 Tailpipe Emission (gpm)", y = "Frequency", title = "Histogram of CO2 Tailpipe Emission with Best-fit Normal Distribution Curve")
-
-# Combine categorical values for fuelType
-table_fueltype <- table(data_study$fuelType)
-print(table_fueltype)
-data_study$fuelType[data_study$fuelType == "Premium Gas and Electricity"] <- "Hybrid"
-data_study$fuelType[data_study$fuelType == "Premium Gas or Electricity"] <- "Hybrid"
-data_study$fuelType[data_study$fuelType == "Premium and Electricity"] <- "Hybrid"
-data_study$fuelType[data_study$fuelType == "Premium or E85"] <- "E85"
-data_study$fuelType[data_study$fuelType == "Gasoline or E85"] <- "E85"
-data_study$fuelType[data_study$fuelType == "Regular Gas and Electricity"] <- "Hybrid"
-data_study$fuelType[data_study$fuelType == "Regular Gas or Electricity"] <- "Hybrid"
-data_study$fuelType[data_study$fuelType == "Gasoline or natural gas"] <- "Gasoline or Other"
-data_study$fuelType[data_study$fuelType == "Gasoline or propane"] <- "Gasoline or Other"
-data_study$fuelType[data_study$fuelType == "CNG"] <- "Gasoline or Other"
-table_fueltype <- table(data_study$fuelType)
-print(table_fueltype)
-
-# Combine categorical values for drive
-table_drive <- table(data_study$drive)
-print(table_drive)

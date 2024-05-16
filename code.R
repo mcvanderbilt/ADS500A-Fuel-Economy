@@ -1019,6 +1019,146 @@ epaData.lm7.viz <- ggplot(
 epaData.lm7.viz
 
 
+# ADD PREDICTED AND RESIDUAL VALUES TO DATAFRAME --------------------------
+
+epaData$co2Prediction <- predict(epaData.lm7)
+
+epaData$co2Residual <- resid(epaData.lm7)
+
+# EVALUATE RESIDUALS ------------------------------------------------------
+
+epaData.lm7.resid.sp <- ggplot(
+  epaData,
+  aes(
+    x = co2TailpipeGpm,
+    y = co2Residual
+  )
+) +
+  geom_point() +
+  labs(
+    title = "Scatterplot of Residuals by Observed CO2 Emissions",
+    x = "Observed CO2 Emissions",
+    y = "Residual Values"
+  )
+epaData.lm7.resid.sp
+
+# HISTOGRAM OF LINEAR MODEL RESIDUALS -------------------------------------
+
+tmpMedian <- median(epaData$co2Residual)
+tmpMean <- mean(epaData$co2Residual)
+tmpSD <- sd(epaData$co2Residual)
+
+epaData.lm7.resid.hist <- gf_dhistogram(
+  ~ epaData$co2Residual, 
+  data = epaData,
+  bins = round(sqrt(epaData.count)/4,0),
+  fill = "lightblue", 
+  color = "black"
+) |>
+  gf_fitdistr(
+    ~ epaData$co2Residual, 
+    data = epaData, 
+    dist = "norm", 
+    color = "red"
+  ) |>
+  gf_vline(
+    xintercept = tmpMean,
+    color = "blue",
+    linetype = "solid",
+    size = 2
+  ) |>
+  gf_vline(
+    xintercept = tmpMedian,
+    color = "blue",
+    linetype = "dashed",
+    size = 2
+  ) |>
+  gf_vline(
+    xintercept = tmpMean - tmpSD,
+    color = "purple",
+    linetype = "dashed",
+    size = 1
+  ) |>
+  gf_vline(
+    xintercept = tmpMean + tmpSD,
+    color = "purple",
+    linetype = "dashed",
+    size = 1
+  ) |>
+  gf_vline(
+    xintercept = tmpMean - 2*tmpSD,
+    color = "orange",
+    linetype = "dashed",
+    size = 1
+  ) |>
+  gf_vline(
+    xintercept = tmpMean + 2*tmpSD,
+    color = "orange",
+    linetype = "dashed",
+    size = 1
+  ) |>
+  gf_vline(
+    xintercept = tmpMean - 3*tmpSD,
+    color = "grey",
+    linetype = "dashed",
+    size = 1
+  ) |>
+  gf_vline(
+    xintercept = tmpMean + 3*tmpSD,
+    color = "grey",
+    linetype = "dashed",
+    size = 1
+  ) +
+  labs(title = "Histogram of CO2 Tailpipe Residuals with Normal Distribution
+       Includes Empirical Rule 68.2/95.4/99.7 Values",
+       x = "CO2 Tailpipe Emissions",
+       y = "Frequency"
+  )
+epaData.lm7.resid.hist
+
+# notice the residuals follow a normal distribution as expected
+
+# EVALUATION OF SS AND SAD ------------------------------------------------
+
+epaData$co2Residual.SSD <- epaData$co2Residual ^ 2
+epaData$co2Residual.SAD <- abs(epaData$co2Residual)
+
+epaData.lm7.resid.SSD <- ggplot(
+  epaData,
+  aes(
+    x = co2TailpipeGpm,
+    y = epaData$co2Residual.SSD
+  )
+) +
+  geom_point() +
+  labs(
+    title = "Scatterplot of Squared Deviations by Observed CO2 Emissions",
+    x = "Observed CO2 Emissions",
+    y = "Squared Residual"
+  )
+epaData.lm7.resid.SSD
+
+epaData.lm7.resid.SAD <- ggplot(
+  epaData,
+  aes(
+    x = co2TailpipeGpm,
+    y = epaData$co2Residual.SAD
+  )
+) +
+  geom_point() +
+  labs(
+    title = "Scatterplot of Absolute Deviations by Observed CO2 Emissions",
+    x = "Observed CO2 Emissions",
+    y = "Squared Residual"
+  )
+epaData.lm7.resid.SAD
+
+
+# FINAL LOOK AT LINEAR MODEL ----------------------------------------------
+
+summary(epaData.lm7)
+supernova(epaData.lm7)
+
 # CONCLUSION --------------------------------------------------------------
 
 # Based on our objective variables, the best model appear to be the use

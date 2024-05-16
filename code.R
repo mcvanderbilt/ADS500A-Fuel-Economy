@@ -1025,6 +1025,23 @@ epaData$co2Prediction <- predict(epaData.lm7)
 
 epaData$co2Residual <- resid(epaData.lm7)
 
+# EVALUATE RESIDUALS BY PREDICTED VALUES ----------------------------------
+
+epaData.lm7.resid.predresid <- ggplot(
+  epaData,
+  aes(
+    x = co2Prediction,
+    y = co2Residual
+  )
+) +
+  geom_point() +
+  labs(
+    title = "Scatterplot of Residuals by Predicted CO2 Emissions",
+    x = "Predicted CO2 Emissions",
+    y = "Residual Values"
+  )
+epaData.lm7.resid.predresid
+
 # EVALUATE RESIDUALS ------------------------------------------------------
 
 epaData.lm7.resid.sp <- ggplot(
@@ -1042,7 +1059,7 @@ epaData.lm7.resid.sp <- ggplot(
   )
 epaData.lm7.resid.sp
 
-# HISTOGRAM OF LINEAR MODEL RESIDUALS -------------------------------------
+# PERFORM NORMALITY CHECK -------------------------------------------------
 
 tmpMedian <- median(epaData$co2Residual)
 tmpMean <- mean(epaData$co2Residual)

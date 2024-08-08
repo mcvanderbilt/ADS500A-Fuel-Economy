@@ -968,7 +968,7 @@ epaData.lm6 <- lm(
 )
 summary(epaData.lm6)
 supernova(epaData.lm6)
-vif(epaData.lm6)
+vif(epaData.lm6) 
 
 # this is looking better. what if we try simplifying our model a little
 # bit more?
@@ -1179,4 +1179,4 @@ supernova(epaData.lm7)
 # CONCLUSION --------------------------------------------------------------
 
 # Based on our objective variables, the best model appear to be the use
-# of engine cylinders to predict CO2 emissions.
+# of engine displacement to predict CO2 emissions.

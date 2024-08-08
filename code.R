@@ -1179,4 +1179,4 @@ supernova(epaData.lm7)
 # CONCLUSION --------------------------------------------------------------
 
 # Based on our objective variables, the best model appear to be the use
-# of engine cylinders to predict CO2 emissions.
+# of engine displacement to predict CO2 emissions.

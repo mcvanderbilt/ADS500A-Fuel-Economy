@@ -146,6 +146,33 @@ epaData <- na.omit(epaData)
 
 epaData.count <- nrow(epaData)
 
+# CREATE EMISSIONS CATEGORY -----------------------------------------------
+
+epaData.co2.mean <- mean(epaData$co2TailpipeGpm)
+epaData.co2.sd <- sd(epaData$co2TailpipeGpm)
+
+epaData <- epaData |>
+  mutate(
+    emissionType = case_when(
+      co2TailpipeGpm < 75 ~ "1. Ultra-Low Emission",
+      co2TailpipeGpm < epaData.co2.mean - 2 * epaData.co2.sd ~ 
+          "2. Very-Low Emission",
+      co2TailpipeGpm >= epaData.co2.mean - 2 * epaData.co2.sd &
+        co2TailpipeGpm < epaData.co2.mean - 1 * epaData.co2.sd ~
+          "2. Low Emission",
+      co2TailpipeGpm >= epaData.co2.mean - 1 * epaData.co2.sd &
+        co2TailpipeGpm < epaData.co2.mean + 1 * epaData.co2.sd ~
+          "4. Standard",
+      co2TailpipeGpm >= epaData.co2.mean + 1 * epaData.co2.sd &
+        co2TailpipeGpm < epaData.co2.mean + 2 * epaData.co2.sd ~
+          "5. Polluter",
+      co2TailpipeGpm >= epaData.co2.mean + 2 * epaData.co2.sd ~
+        "6. Gross Polluter"
+    )
+  )
+
+tally(epaData$emissionType)
+
 # DESCRIPTIVE STATISTICS - QUANTITATIVE -----------------------------------
 
 epaData.ds.co2TailpipeGpm <- favstats(epaData$co2TailpipeGpm)
@@ -313,6 +340,11 @@ epaData.ds.VClass <- epaData |>
 
 epaData.ds.transmission <- epaData |>
   group_by(transmission) |>
+  summarise(n = n()) |>
+  mutate(rel.freq = n / sum(n))
+
+epaData.ds.emissionType <- epaData |>
+  group_by(emissionType) |>
   summarise(n = n()) |>
   mutate(rel.freq = n / sum(n))
 
@@ -973,7 +1005,7 @@ vif(epaData.lm6)
 # this is looking better. what if we try simplifying our model a little
 # bit more?
 
-# MULTIVARIABLE LINEAR MODELING #6 ----------------------------------------
+# MULTIVARIABLE LINEAR MODELING #7 ----------------------------------------
 
 epaData.lm7 <- lm(
   co2TailpipeGpm ~
@@ -1180,3 +1212,21 @@ supernova(epaData.lm7)
 
 # Based on our objective variables, the best model appear to be the use
 # of engine displacement to predict CO2 emissions.
+
+
+
+# EXAMPLE CHI-SQUARED TESTS -----------------------------------------------
+
+x2Table <- tally(
+  emissionType ~ cylinders,
+  data = epaData
+)
+
+chisq.test(x2Table)
+
+x2Table <- tally(
+  emissionType ~ transmission,
+  data = epaData
+)
+
+chisq.test(x2Table)
